@@ -4,44 +4,75 @@ from openpyxl import Workbook
 import openpyxl
 
 
-def excel_handler(path, date_name):
+def excel_handler(path, obj, date_name):
 
     new_folder = 'Отчеты'
-    new_path = os.path.join(path, new_folder)
+    new_path = os.path.join(path, new_folder, date_name)
     if not os.path.exists(new_path):
         os.makedirs(new_path)
     os.chdir(new_path)
-    # objs = obj_base
-    objs = []
 
     format_file = '.xlsx'
-    filename = date_name + format_file
+    filename = obj.name_obj + format_file
     path = os.path.join(new_path, filename)
 
     wb = Workbook()
-    wb.create_sheet(date_name, 0)
+    wb.create_sheet('Сводка', 0)
     wb.save(filename)
 
     excel = win32com.client.Dispatch("Excel.Application")
     work_b1 = excel.Workbooks.Open(path)
 
     sheet = work_b1.Worksheets(1)
-    sheet.Cells(2, 1).ColumnWidth = 6
+    sheet.Cells(2, 1).ColumnWidth = 10
     sheet.Cells(2, 2).ColumnWidth = 4
     sheet.Cells(2, 3).ColumnWidth = 10
     sheet.Cells(2, 4).ColumnWidth = 15
-    sheet.Cells(2, 5).ColumnWidth = 10
+    sheet.Cells(2, 5).ColumnWidth = 12
+
     sheet.Cells(2, 6).ColumnWidth = 10
     sheet.Cells(2, 7).ColumnWidth = 10
     sheet.Cells(2, 8).ColumnWidth = 10
     sheet.Cells(2, 9).ColumnWidth = 10
+
     Selection = sheet.Range(sheet.Cells(2, 6), sheet.Cells(4, 9))
     Selection.Merge()
-
     Selection = sheet.Range(sheet.Cells(5, 6), sheet.Cells(5, 7))
     Selection.Merge()
-
     Selection = sheet.Range(sheet.Cells(5, 8), sheet.Cells(5, 9))
+    Selection.Merge()
+
+    sheet.Cells(2, 10).ColumnWidth = 10
+    sheet.Cells(2, 11).ColumnWidth = 10
+    sheet.Cells(2, 12).ColumnWidth = 10
+    sheet.Cells(2, 13).ColumnWidth = 10
+
+    Selection = sheet.Range(sheet.Cells(2, 10), sheet.Cells(4, 13))
+    Selection.Merge()
+    Selection = sheet.Range(sheet.Cells(5, 10), sheet.Cells(5, 11))
+    Selection.Merge()
+    Selection = sheet.Range(sheet.Cells(5, 12), sheet.Cells(5, 13))
+    Selection.Merge()
+
+    sheet.Cells(2, 14).ColumnWidth = 13
+    sheet.Cells(2, 15).ColumnWidth = 13
+
+    Selection = sheet.Range(sheet.Cells(2, 14), sheet.Cells(4, 15))
+    Selection.Merge()
+
+    sheet.Cells(2, 16).ColumnWidth = 18
+
+    Selection = sheet.Range(sheet.Cells(2, 16), sheet.Cells(6, 16))
+    Selection.Merge()
+
+    sheet.Cells(2, 17).ColumnWidth = 13
+    sheet.Cells(2, 18).ColumnWidth = 13
+
+    Selection = sheet.Range(sheet.Cells(2, 17), sheet.Cells(4, 18))
+    Selection.Merge()
+
+    sheet.Cells(2, 19).ColumnWidth = 13
+    Selection = sheet.Range(sheet.Cells(2, 19), sheet.Cells(4, 19))
     Selection.Merge()
 
     for i in range(1, 6):
@@ -53,8 +84,8 @@ def excel_handler(path, date_name):
     sheet.Cells(2, 3).Value = 'Заказчик'
     sheet.Cells(2, 4).Value = 'Адрес места сбора и накопления ТКО и КГО'
     sheet.Cells(2, 5).Value = 'Время загрузки, час-минуты'
-    sheet.Cells(2, 6).Value = 'Количество ТКО с мест сбора и накопления, осуществляемого контейнерным способом'
 
+    sheet.Cells(2, 6).Value = 'Количество ТКО с мест сбора и накопления, осуществляемого контейнерным способом'
     sheet.Cells(5, 6).Value = 'объем, м3'
     sheet.Cells(5, 8).Value = 'количество контейнеров, шт'
     sheet.Cells(6, 6).Value = 'План'
@@ -62,21 +93,50 @@ def excel_handler(path, date_name):
     sheet.Cells(6, 8).Value = 'План'
     sheet.Cells(6, 9).Value = 'Факт'
 
-    Selection = sheet.Range("A2:I6")
+    sheet.Cells(2, 10).Value = 'Количество ТКО с мест сбора и накопления, осуществляемого бесконтейнерным способом'
+    sheet.Cells(5, 10).Value = 'объем, м3'
+    sheet.Cells(5, 12).Value = 'масса, кг/единиц тары'
+    sheet.Cells(6, 10).Value = 'План'
+    sheet.Cells(6, 11).Value = 'Факт'
+    sheet.Cells(6, 12).Value = 'План'
+    sheet.Cells(6, 13).Value = 'Факт'
+
+    sheet.Cells(2, 14).Value = 'Количество КГО с мест сбора и накопления ТКО, специальных площадок'
+    sheet.Cells(5, 14).Value = 'объем, м3'
+    sheet.Cells(5, 15).Value = 'масса, кг'
+    sheet.Cells(6, 14).Value = 'План'
+    sheet.Cells(6, 15).Value = 'Факт'
+
+    sheet.Cells(2, 16).Value = 'Время выгрузки, час-минуты'
+    sheet.Cells(2, 17).Value = 'Количество ТКО с мест сбора и накопления, поступивших на объекты обращения с отходами'
+    sheet.Cells(5, 17).Value = 'объем, м3'
+    sheet.Cells(5, 18).Value = 'масса, кг'
+    sheet.Cells(6, 17).Value = 'План'
+    sheet.Cells(6, 18).Value = 'Факт'
+
+    sheet.Cells(2, 19).Value = 'ФИО водителя'
+
+    i = 7
+    for num, items in enumerate(obj.travel_base):
+        sheet.Cells(i, 1).Value = items[0]
+        sheet.Cells(i, 4).Value = items[1]
+        sheet.Cells(i, 5).Value = items[2]
+        i += 1
+
+    Selection = sheet.Range(f"A2:S{i-1}")
     Selection.WrapText = True
     Selection.Font.Size = 11
     Selection.Borders.Weight = 2
     Selection.HorizontalAlignment = -4108
     Selection.VerticalAlignment = -4108
 
+    sheet.Cells(4, 1).RowHeight = 35
+    sheet.Cells(5, 1).RowHeight = 30
     work_b1.Save()
     work_b1.Close()
     excel.Quit()
 
 
-if __name__ == '__main__':
-    path = os.getcwd()
-    excel_handler(path, date_name='20.08.2020')
 
     # sheet.Cells(1, 8).ColumnWidth = 12
     # sheet.Cells(1, 9).ColumnWidth = 12

@@ -40,7 +40,7 @@ def time_conv(date_f):
         t2 = datetime.datetime(int(y), int(m), int(d), int(h2), int(min2), int(s))
         t2_s1_unix = int(str(time.mktime(t2.timetuple()))[:-2])
 
-        return t1_s1_unix, t2_s1_unix, date
+        return t1_s1_unix, t2_s1_unix
 
     except Exception as exc:
         print(exc)
